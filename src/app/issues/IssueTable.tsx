@@ -1,7 +1,7 @@
 import { IssueStatusBadge, Link } from "@/components";
-import { Issue, IssueStatus } from "@prisma/client";
+import { Issue, IssueStatus, User } from "@prisma/client";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
-import { Table } from "@radix-ui/themes";
+import { Avatar, Flex, Table } from "@radix-ui/themes";
 import NextLink from "next/link";
 
 export interface IssueQuery {
@@ -12,7 +12,7 @@ export interface IssueQuery {
 
 interface Props {
 	searchParams: IssueQuery;
-	issues: Issue[];
+	issues: (Issue & { assignedUser: User | null })[];
 }
 
 const IssueTable = ({ searchParams, issues }: Props) => {
@@ -41,6 +41,21 @@ const IssueTable = ({ searchParams, issues }: Props) => {
 							<IssueStatusBadge status={issue.status} />
 						</Table.Cell>
 						<Table.Cell className="hidden md:table-cell">{issue.createdAt.toDateString()}</Table.Cell>
+						<Table.Cell className="hidden md:table-cell">
+							{issue.assignedUser && (
+								<Flex align="center" direction="row" gap="2">
+									<Avatar
+										size="2"
+										radius="full"
+										src={issue.assignedUser.image!}
+										alt={issue.assignedUser.name || "User Avatar"}
+										fallback={issue.assignedUser.name ? issue.assignedUser.name[0] : "U"}
+									/>
+									{issue.assignedUser?.name}
+								</Flex>
+							)}
+							{!issue.assignedUser && "Unassigned"}
+						</Table.Cell>
 					</Table.Row>
 				))}
 			</Table.Body>
@@ -50,12 +65,13 @@ const IssueTable = ({ searchParams, issues }: Props) => {
 
 export const columnsNames: {
 	label: string;
-	key: keyof Issue;
+	key: keyof Issue | "assignedUser";
 	className?: string;
 }[] = [
 	{ label: "Issue", key: "title" },
 	{ label: "Status", key: "status", className: "hidden md:table-cell" },
 	{ label: "Created", key: "createdAt", className: "hidden md:table-cell" },
+	{ label: "Assigned User", key: "assignedUser", className: "hidden md:table-cell" },
 ];
 
 export default IssueTable;
