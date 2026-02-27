@@ -1,3 +1,3 @@
-import IssueFormSkeleton from "../../new/loading";
+import IssueFormSkeleton from '../../new/loading';
 
 export default IssueFormSkeleton;

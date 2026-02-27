@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next Issue Tracker
+
+An advanced issue tracker built with [Next.js](https://nextjs.org), Prisma, PostgreSQL, and Sentry for error monitoring.
+
+## Features
+
+- Dashboard with issue summary, chart, and latest issues
+- Issue list with filtering, sorting, and pagination
+- Assign users to issues
+- Authentication with NextAuth.js
+- Error monitoring and tracing with Sentry
+- Responsive UI using Radix UI and Tailwind CSS
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
 
 ```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+### 2. Configure environment variables
+
+Copy `.env.examle` to `.env` and fill in the required values:
+
+```
+cp .env.examle .env
+```
+
+Set up your database connection, NextAuth, Google OAuth, and Sentry credentials in `.env`.
+
+### 3. Set up the database
+
+Run Prisma migrations:
+
+```
+npx prisma migrate deploy
+# or for development
+npx prisma migrate dev
+```
+
+### 4. Start the development server
+
+```
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Sentry Integration
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Sentry is configured for error monitoring and tracing on both server and client. See:
 
-## Learn More
+- `sentry.server.config.ts`, `sentry.edge.config.ts`, `src/instrumentation.ts`, `src/instrumentation-client.ts`
+- Example error page: `/sentry-example-page`
+- Example API route: `/api/sentry-example-api`
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+next-issue-tracker/
+├── prisma/                  # Prisma schema and migrations
+│   ├── schema.prisma
+│   └── migrations/
+├── public/                  # Static assets
+├── src/
+│   ├── app/                 # Main Next.js app, pages, and components
+│   │   ├── api/             # API routes (Next.js route handlers)
+│   │   ├── issues/          # Issue-related pages and components
+│   │   ├── _components/     # Shared UI components
+│   │   └── ...
+│   ├── instrumentation.ts   # Sentry instrumentation (server/edge)
+│   └── instrumentation-client.ts # Sentry instrumentation (client)
+├── sentry.server.config.ts  # Sentry server config
+├── sentry.edge.config.ts    # Sentry edge config
+├── package.json
+├── .env.examle
+└── README.md
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `src/app/page.tsx` - Dashboard page
+- `src/app/issues/page.tsx` - Issue list page
+- `src/app/global-error.tsx` - Global error handler
+- `src/app/sentry-example-page/page.tsx` - Sentry test page
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `dev` - Start development server
+- `build` - Build for production
+- `start` - Start production server
+- `lint` - Run ESLint

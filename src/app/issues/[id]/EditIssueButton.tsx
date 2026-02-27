@@ -1,19 +1,19 @@
-import { Pencil2Icon } from "@radix-ui/react-icons";
-import { Button } from "@radix-ui/themes";
-import Link from "next/link";
+import { Pencil2Icon } from '@radix-ui/react-icons';
+import { Button } from '@radix-ui/themes';
+import Link from 'next/link';
 
 interface Props {
-	issueId: string;
+  issueId: string;
 }
 
 const EditIssueButton = ({ issueId }: Props) => {
-	return (
-		<Button asChild>
-			<Link href={`/issues/${issueId}/edit`} prefetch={true}>
-				<Pencil2Icon />
-				Edit Issue
-			</Link>
-		</Button>
-	);
+  return (
+    <Button asChild>
+      <Link href={`/issues/${issueId}/edit`} prefetch={true}>
+        <Pencil2Icon />
+        Edit Issue
+      </Link>
+    </Button>
+  );
 };
 export default EditIssueButton;
