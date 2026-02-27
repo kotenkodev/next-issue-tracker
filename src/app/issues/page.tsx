@@ -4,6 +4,7 @@ import Pagination from "@/components/Pagination";
 import { IssueStatus } from "@prisma/client";
 import IssueTable, { columnsNames, IssueQuery } from "./IssueTable";
 import { Flex } from "@radix-ui/themes";
+import { Metadata } from "next";
 
 interface Props {
 	searchParams: IssueQuery;
@@ -29,6 +30,7 @@ const IssuesPage = async ({ searchParams }: Props) => {
 		orderBy,
 		skip: (page - 1) * pageSize,
 		take: pageSize,
+		include: { assignedUser: true },
 	});
 
 	const itemCount = await prisma.issue.count({
@@ -47,4 +49,33 @@ const IssuesPage = async ({ searchParams }: Props) => {
 };
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+	title: "Issue Tracker - Issue List",
+	description:
+		"Browse and manage all issues in the Issue Tracker. Filter by status, sort by different criteria, and view details of each issue.",
+	keywords: [
+		"issue tracker",
+		"issue list",
+		"project management",
+		"bug tracking",
+		"task management",
+		"filter",
+		"sort",
+		"details",
+	],
+	openGraph: {
+		title: "Issue Tracker - Issue List",
+		description: "Browse and manage all issues in the Issue Tracker.",
+		siteName: "Issue Tracker",
+		locale: "en_US",
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Issue Tracker - Issue List",
+		description: "Browse and manage all issues in the Issue Tracker.",
+	},
+};
+
 export default IssuesPage;
