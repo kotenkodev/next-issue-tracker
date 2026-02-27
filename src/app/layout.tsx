@@ -6,6 +6,8 @@ import "./theme-config.css";
 import NavBar from "@/components/NavBar";
 import { Container, Theme, ThemePanel } from "@radix-ui/themes";
 import AuthProvider from "@/components/Provider";
+import Provider from "@/components/QueryProvider";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const inter = Inter({
 	subsets: ["latin"],
@@ -26,15 +28,18 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={inter.variable}>
-				<AuthProvider>
-					<Theme accentColor="purple" grayColor="sage">
-						<NavBar />
-						<Container>
-							<main className="p-5">{children}</main>
-						</Container>
-						{/* <ThemePanel /> */}
-					</Theme>
-				</AuthProvider>
+				<Provider>
+					<AuthProvider>
+						<Theme accentColor="purple" grayColor="sage">
+							<NavBar />
+							<Container>
+								<main className="p-5">{children}</main>
+							</Container>
+							{/* <ThemePanel /> */}
+						</Theme>
+					</AuthProvider>
+					<ReactQueryDevtools initialIsOpen={false} />
+				</Provider>
 			</body>
 		</html>
 	);

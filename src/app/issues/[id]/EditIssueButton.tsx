@@ -8,9 +8,11 @@ interface Props {
 
 const EditIssueButton = ({ issueId }: Props) => {
 	return (
-		<Button>
-			<Pencil2Icon />
-			<Link href={`/issues/${issueId}/edit`}>Edit Issue</Link>
+		<Button asChild>
+			<Link href={`/issues/${issueId}/edit`} prefetch={true}>
+				<Pencil2Icon />
+				Edit Issue
+			</Link>
 		</Button>
 	);
 };
