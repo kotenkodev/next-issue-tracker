@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/../prisma/client";
-import { issueSchema } from "@/app/validationSchemas";
+import { patchIssueSchema } from "@/app/validationSchemas";
 import authOptions from "../../auth/authOptions";
 import { getServerSession } from "next-auth";
 
@@ -12,9 +12,17 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
 	const body = await req.json();
 	const { id } = await params;
-	const validation = issueSchema.safeParse(body);
+	const validation = patchIssueSchema.safeParse(body);
 	if (!validation.success) {
 		return NextResponse.json({ error: validation.error.format() }, { status: 400 });
+	}
+
+	const { assignedUserId, title, description, status } = validation.data;
+	if (assignedUserId) {
+		const user = await prisma.user.findUnique({ where: { id: assignedUserId } });
+		if (!user) {
+			return NextResponse.json({ error: "Assigned user not found" }, { status: 404 });
+		}
 	}
 
 	const issue = await prisma.issue.findUnique({ where: { id } });
@@ -25,9 +33,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 	const updatedIssue = await prisma.issue.update({
 		where: { id },
 		data: {
-			title: validation.data.title,
-			description: validation.data.description,
-			status: validation.data.status,
+			title,
+			description,
+			status,
+			assignedUser: assignedUserId ? { connect: { id: assignedUserId } } : { disconnect: true },
 		},
 	});
 
