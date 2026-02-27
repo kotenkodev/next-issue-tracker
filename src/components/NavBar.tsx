@@ -3,9 +3,12 @@ import Link from "next/link";
 import { IoIosBug } from "react-icons/io";
 import { usePathname } from "next/navigation";
 import classnames from "classnames";
+import { useSession } from "next-auth/react";
+import { Box } from "@radix-ui/themes";
 
 const NavBar = () => {
 	const pathname = usePathname();
+	const { status, data: session } = useSession();
 	const links = [
 		{ name: "Dashboard", href: "/" },
 		{ name: "Issues", href: "/issues" },
@@ -18,19 +21,24 @@ const NavBar = () => {
 			</Link>
 			<ul className="flex space-x-6">
 				{links.map((link) => (
-					<Link
-						href={link.href}
-						key={link.href}
-						className={classnames({
-							"hover:text-zinc-800 transition-colors": true,
-							"text-zinc-900": link.href === pathname,
-							"text-zinc-500": link.href !== pathname,
-						})}
-					>
-						{link.name}
-					</Link>
+					<li key={link.href}>
+						<Link
+							href={link.href}
+							className={classnames({
+								"hover:text-zinc-800 transition-colors": true,
+								"text-zinc-900": link.href === pathname,
+								"text-zinc-500": link.href !== pathname,
+							})}
+						>
+							{link.name}
+						</Link>
+					</li>
 				))}
 			</ul>
+			<Box>
+				{status === "authenticated" && <Link href="/api/auth/signout">Sign Out</Link>}
+				{status === "unauthenticated" && <Link href="/api/auth/signin">Login</Link>}
+			</Box>
 		</nav>
 	);
 };
