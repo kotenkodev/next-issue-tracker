@@ -57,5 +57,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   }
 
   await prisma.issue.delete({ where: { id } });
+
   return NextResponse.json({ message: 'Issue deleted successfully' }, { status: 200 });
 }

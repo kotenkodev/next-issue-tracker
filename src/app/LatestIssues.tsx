@@ -2,8 +2,11 @@ import { prisma } from '@/../prisma/client';
 import { IssueStatusBadge } from '@/components';
 import { Avatar, Card, Flex, Heading, Table } from '@radix-ui/themes';
 import NextLink from 'next/link';
+import { unstable_noStore as noStore } from 'next/cache';
 
 const LatestIssues = async () => {
+  noStore();
+
   const issues = await prisma.issue.findMany({
     orderBy: { createdAt: 'desc' },
     take: 5,
@@ -43,7 +46,5 @@ const LatestIssues = async () => {
     </Card>
   );
 };
-
-export const dynamic = 'force-dynamic';
 
 export default LatestIssues;
